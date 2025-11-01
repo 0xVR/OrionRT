@@ -11,12 +11,20 @@ BuddyAllocator::BuddyAllocator(void* base,
     max_level_++;
   }
   max_level_--;
-
   free_lists_[max_level_].push_back({base_, total_bytes_});
 }
 
+static int LevelForSizeStatic(size_t size, size_t alignment) {
+  size = std::max(size, alignment);
+  int level = 0;
+  while ((1ULL << level) < size) level++;
+  return level;
+}
+
 void* BuddyAllocator::Allocate(size_t bytes) {
-  return nullptr;  // not implemented yet
+  int level = LevelForSizeStatic(bytes, alignment_);
+  // splitting not implemented yet
+  return nullptr;
 }
 
 void BuddyAllocator::Release(void* ptr, size_t bytes) {
