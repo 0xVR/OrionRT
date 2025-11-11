@@ -28,12 +28,18 @@ void TensorPool::FinalizePlan() {
 }
 
 TensorHandle TensorPool::Allocate(int tensor_id) {
-  // runtime allocator implemented in next commit
-  return {tensor_id, nullptr, 0};
+  void* ptr = assignment_.at(tensor_id);
+
+  for (const auto& t : tensors_) {
+    if (t.id == tensor_id) {
+      return TensorHandle{tensor_id, ptr, t.bytes};
+    }
+  }
+  return {tensor_id, ptr, 0};
 }
 
-void TensorPool::Release(TensorHandle h) {
-  // no-op
+void TensorPool::Release(TensorHandle /*h*/) {
+  // no-op: memory reused automatically
 }
 
 void* TensorPool::GetPtr(int tensor_id) const {
