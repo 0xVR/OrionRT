@@ -7,6 +7,8 @@
 Arena::Arena(size_t total_bytes, size_t alignment)
     : total_bytes_(total_bytes),
       alignment_(alignment),
+      base_ptr_(nullptr),
+      allocator_(nullptr),
       peak_bytes_(0) {
   base_ptr_ = std::aligned_alloc(alignment_, total_bytes_);
   allocator_ = new BuddyAllocator(base_ptr_, total_bytes_, alignment_);
