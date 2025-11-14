@@ -30,7 +30,6 @@ BuddyAllocator::BuddyAllocator(void* base,
   free_lists_[max_level_].push_back({base_, total_bytes_});
 }
 
-// Recursive split
 static void* SplitBlockStatic(std::list<BuddyAllocator::Block>* free_lists,
                               int from_level,
                               int to_level,
@@ -46,6 +45,7 @@ static void* SplitBlockStatic(std::list<BuddyAllocator::Block>* free_lists,
 
   size_t size = LevelSizeStatic(to_level);
   void* buddy = static_cast<char*>(parent) + size;
+
   free_lists[to_level].push_back({buddy, size});
 
   return parent;
@@ -73,15 +73,13 @@ void BuddyAllocator::Release(void* ptr, size_t bytes) {
   int level = LevelForSizeStatic(bytes, alignment_);
   size_t size = LevelSizeStatic(level);
 
-  // Try to merge upward
   void* current = ptr;
 
   for (;;) {
     void* buddy = BuddyOf(base_, current, size);
-
     auto& fl = free_lists_[level];
-    bool found = false;
 
+    bool found = false;
     for (auto it = fl.begin(); it != fl.end(); ++it) {
       if (it->ptr == buddy) {
         fl.erase(it);
