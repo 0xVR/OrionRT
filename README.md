@@ -1,6 +1,6 @@
-# TensorPool
+# OrionRT
 
-TensorPool is a lightweight C++17 runtime allocator designed for workloads with
+OrionRT is a lightweight C++17 runtime allocator designed for workloads with
 static execution graphs, such as deep-learning inference pipelines. It performs
 lifetime analysis over a sequence of operations and assigns each tensor a
 physical memory region using planned reuse. This reduces allocation overhead and
